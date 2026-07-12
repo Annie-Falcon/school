@@ -1,20 +1,18 @@
 package ru.hogwarts.school.controllers;
 
-//import org.junit.jupiter.api.Tag;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.Collection;
 import java.util.Collections;
 
 @RestController
-@RequestMapping("/faculty")
-//@Tag("API для факультета")
+@RequestMapping("faculty")
 public class FacultyController {
     private final FacultyService facultyService;
 
@@ -38,10 +36,21 @@ public class FacultyController {
         return ResponseEntity.ok(faculty);
     }
 
-    @GetMapping("all") // GET https://localhost:8080/faculty/all
+    @GetMapping// GET https://localhost:8080/faculty/all
     @ManagedOperation(description = "получение всех факультетов")
-    public ResponseEntity<Collection<Faculty>> getAllFaculties() {
+    public ResponseEntity<Collection<Faculty>> getFaculties(@RequestParam(required = false) String name,
+                                                            @RequestParam(required = false) String color) {
+        if ((name != null && !name.isBlank()) || (color != null && !color.isBlank())) {
+            return ResponseEntity.ok(facultyService.findBooksByNameOrColor(name, color));
+        }
         return ResponseEntity.ok(facultyService.getAll());
+    }
+
+    @GetMapping("sudents/{facultyId}")
+    @ManagedOperation(description = "получение студентов факультета")
+    public ResponseEntity<Collection<Student>> getStudents(@PathVariable Long facultyId) {
+        Collection<Student> students = facultyService.get(facultyId).getStudents();
+        return ResponseEntity.ok(students);
     }
 
     @PutMapping  // PUT https://localhost:8080/faculty
