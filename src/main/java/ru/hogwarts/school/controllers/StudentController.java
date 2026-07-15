@@ -1,19 +1,17 @@
 package ru.hogwarts.school.controllers;
 
-//import org.junit.jupiter.api.Tag;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
 import java.util.Collection;
 
 @RestController
-@RequestMapping("/student")
-//@Tag("API для студентов")
+@RequestMapping("student")
 public class StudentController {
     private final StudentService studentService;
 
@@ -37,10 +35,21 @@ public class StudentController {
         return ResponseEntity.ok(student);
     }
 
-    @GetMapping("all") // GET https://localhost:8080/student/all
-    @ManagedOperation(description = "получение всех студентов")
-    public ResponseEntity<Collection<Student>> getAllStudents() {
+    @GetMapping // GET https://localhost:8080/student/
+    @ManagedOperation(description = "получение списка студентов")
+    public ResponseEntity<Collection<Student>> getStudents(@RequestParam(required = false) Integer min,
+                                                           @RequestParam(required = false) Integer max) {
+        if (min != null && max != null) {
+            return ResponseEntity.ok(studentService.findByAgeBetween(min, max));
+        }
         return ResponseEntity.ok(studentService.getAll());
+    }
+
+    @GetMapping("faculty/{studentId}")
+    @ManagedOperation(description = "получение факультета студента")
+    public ResponseEntity<Faculty> getFaculty(@PathVariable Long studentId) {
+        Faculty faculty = studentService.get(studentId).getFaculty();
+        return ResponseEntity.ok(faculty);
     }
 
     @PutMapping // PUT https://localhost:8080/student
