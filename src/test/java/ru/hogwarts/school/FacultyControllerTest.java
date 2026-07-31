@@ -10,11 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import ru.hogwarts.school.controllers.FacultyController;
 import ru.hogwarts.school.model.Faculty;
-import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.FacultyRepository;
-import ru.hogwarts.school.repository.StudentRepository;
 import ru.hogwarts.school.service.FacultyService;
-import ru.hogwarts.school.service.StudentService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestRestTemplate
@@ -42,7 +39,7 @@ public class FacultyControllerTest {
 
     @BeforeEach
     void SetUp() {
-        idFacultyTest = facultyService.findIdByNameAndColor("FTest","ColorTest");
+        idFacultyTest = facultyService.findIdByNameAndColor("FTest", "ColorTest");
         if (idFacultyTest == -1) {
             facultyTest = new Faculty();
             facultyTest.setName("FTest");
@@ -53,7 +50,7 @@ public class FacultyControllerTest {
             facultyTest = facultyService.get(idFacultyTest);
         }
 
-        idFacultyDel = facultyService.findIdByNameAndColor("FTestDel","ColorTest");
+        idFacultyDel = facultyService.findIdByNameAndColor("FTestDel", "ColorTest");
         if (idFacultyDel == -1) {
             facultyDel = new Faculty();
             facultyDel.setName("FTestDel");
@@ -86,7 +83,7 @@ public class FacultyControllerTest {
         Assertions.assertThat(this.restTemplate.postForObject("http://localhost:" + port + "/faculty", facultyPost, String.class))
                 .isNotNull();
 
-        long idFacultyPost = facultyService.findIdByNameAndColor("FTestPost","ColorTestPost");
+        long idFacultyPost = facultyService.findIdByNameAndColor("FTestPost", "ColorTestPost");
         facultyService.remove(idFacultyPost);
     }
 
@@ -97,7 +94,7 @@ public class FacultyControllerTest {
         Assertions.assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/faculty/" + idFacultyTest, String.class))
                 .contains("FTestМ");
 
-        long idFacultyPut = facultyService.findIdByNameAndColor("FTestМ","ColorTest");
+        long idFacultyPut = facultyService.findIdByNameAndColor("FTestМ", "ColorTest");
         facultyService.remove(idFacultyPut);
     }
 

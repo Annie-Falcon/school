@@ -48,7 +48,8 @@ public class StudentService {
 
     public long findIdByNameAndAge(String name, Integer age) {
         Collection<Student> tempStudents = this.studentRepository.findAll().stream()
-                .filter(e -> e.getAge().equals(age) && e.getName().equals(name)).collect(Collectors.toList());
+                .filter(e -> e.getAge().equals(age) && e.getName().equals(name))
+                .collect(Collectors.toList());
 
         if (tempStudents.isEmpty()) {
             return -1L;

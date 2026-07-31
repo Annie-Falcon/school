@@ -40,7 +40,7 @@ public class AvatarService {
         Files.deleteIfExists(filePath);
 
         try (InputStream is = file.getInputStream();
-             OutputStream os = Files.newOutputStream(filePath,CREATE_NEW);
+             OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
              BufferedInputStream bis = new BufferedInputStream(is, 1024);
              BufferedOutputStream bos = new BufferedOutputStream(os, 1024)
         ) {
@@ -63,22 +63,22 @@ public class AvatarService {
 
     private byte[] generateImagePreview(Path filePath) throws IOException {
         try (InputStream is = Files.newInputStream(filePath);
-             BufferedInputStream bis = new BufferedInputStream(is,1024);
-             ByteArrayOutputStream baos = new ByteArrayOutputStream()){
+             BufferedInputStream bis = new BufferedInputStream(is, 1024);
+             ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             BufferedImage image = ImageIO.read(bis);
 
-            int height = image.getHeight()/10;
+            int height = image.getHeight() / 10;
             BufferedImage preview = new BufferedImage(100, height, BufferedImage.TYPE_INT_ARGB); // или image.getType()
             Graphics2D graphics = preview.createGraphics();
-            graphics.drawImage(image, 0,0, 100, height,null);
+            graphics.drawImage(image, 0, 0, 100, height, null);
             graphics.dispose();
 
-            ImageIO.write(preview, getExtension(filePath.getFileName().toString()),baos);
+            ImageIO.write(preview, getExtension(filePath.getFileName().toString()), baos);
             return baos.toByteArray();
         }
     }
 
     private String getExtension(String fileName) {
-        return fileName.substring(fileName.lastIndexOf(".")+1);
+        return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
 }

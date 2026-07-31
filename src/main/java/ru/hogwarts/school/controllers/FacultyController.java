@@ -78,4 +78,5 @@ public class FacultyController {
         }
         return ResponseEntity.ok(Collections.emptyList());
     }
+
 }

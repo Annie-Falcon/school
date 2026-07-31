@@ -1,7 +1,6 @@
 package ru.hogwarts.school;
 
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +12,6 @@ import ru.hogwarts.school.controllers.StudentController;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 import ru.hogwarts.school.service.StudentService;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestRestTemplate
@@ -43,7 +39,7 @@ public class StudentControllerTest {
 
     @BeforeEach
     void SetUp() {
-        idStudentTest = studentService.findIdByNameAndAge("МашаTest",20);
+        idStudentTest = studentService.findIdByNameAndAge("МашаTest", 20);
         if (idStudentTest == -1) {
             studentTest = new Student();
             studentTest.setName("МашаTest");
@@ -54,7 +50,7 @@ public class StudentControllerTest {
             studentTest = studentService.get(idStudentTest);
         }
 
-        idStudentDel = studentService.findIdByNameAndAge("МашаDel",20);
+        idStudentDel = studentService.findIdByNameAndAge("МашаDel", 20);
         if (idStudentDel == -1) {
             studentDel = new Student();
             studentDel.setName("МашаDel");
@@ -99,7 +95,7 @@ public class StudentControllerTest {
         Assertions.assertThat(this.restTemplate.postForObject("http://localhost:" + port + "/student", studentPost, String.class))
                 .isNotNull();
 
-        long idStudentPost = studentService.findIdByNameAndAge("ФедорPost",14);
+        long idStudentPost = studentService.findIdByNameAndAge("ФедорPost", 14);
         studentService.remove(idStudentPost);
     }
 
@@ -110,7 +106,7 @@ public class StudentControllerTest {
         Assertions.assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/student/" + idStudentTest, String.class))
                 .contains("МашаTestМ");
 
-        long idStudentPut = studentService.findIdByNameAndAge("МашаTestМ",20);
+        long idStudentPut = studentService.findIdByNameAndAge("МашаTestМ", 20);
         studentService.remove(idStudentPut);
     }
 
