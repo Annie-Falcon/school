@@ -69,5 +69,6 @@ public class Faculty {
                 ", name='" + name + '\'' +
                 ", color=" + color +
                 '}';
+
     }
 }

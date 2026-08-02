@@ -77,5 +77,6 @@ public class FacultyController {
             return ResponseEntity.ok(facultyService.getByColor(color));
         }
         return ResponseEntity.ok(Collections.emptyList());
+
     }
 }

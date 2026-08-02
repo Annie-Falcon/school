@@ -44,5 +44,6 @@ public class StudentService {
 
     public Collection<Student> findByAgeBetween(Integer min, Integer max) {
         return studentRepository.findByAgeBetween(min, max);
+
     }
 }

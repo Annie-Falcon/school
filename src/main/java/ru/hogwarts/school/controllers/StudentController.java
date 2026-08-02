@@ -73,5 +73,6 @@ public class StudentController {
     @ManagedOperation(description = "получение студентов по возрасту")
     public ResponseEntity<Collection<Student>> getStudentsByColor(@RequestParam(required = false) int age) {
         return ResponseEntity.ok(studentService.getByAge(age));
+
     }
 }
