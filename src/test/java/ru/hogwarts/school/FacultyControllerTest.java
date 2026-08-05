@@ -8,6 +8,8 @@ import org.springframework.boot.resttestclient.TestRestTemplate;
 import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpClientErrorException;
 import ru.hogwarts.school.controllers.FacultyController;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.repository.FacultyRepository;
@@ -36,6 +38,7 @@ public class FacultyControllerTest {
 
     Faculty facultyDel;
     long idFacultyDel;
+    long idNotExists = -1L;
 
     @BeforeEach
     void SetUp() {
@@ -63,14 +66,23 @@ public class FacultyControllerTest {
     }
 
     @Test
-    public void testGetAllFaculty() throws Exception {
-        Assertions.assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/faculty", String.class))
-                .isNotEmpty();
+    public void testGetFacultyById() throws Exception {
+        Assertions.assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/faculty/" + idFacultyTest, String.class))
+                .contains("FTest");
     }
 
     @Test
-    public void testGetStudentsByFacultyId() throws Exception {
-        Assertions.assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/faculty/1", String.class))
+    public void testGetFacultyByIdNotFound() throws Exception {
+        try {
+            restTemplate.getForObject("http://localhost:" + port + "/faculty/" + idNotExists, String.class);
+        } catch (HttpClientErrorException ex) {
+            Assertions.assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Test
+    public void testGetAllFaculty() throws Exception {
+        Assertions.assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/faculty", String.class))
                 .isNotEmpty();
     }
 
@@ -105,7 +117,10 @@ public class FacultyControllerTest {
 
         restTemplate.delete("http://localhost:" + port + "/faculty/" + idFacultyDel);
 
-        Assertions.assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/faculty/" + idFacultyDel, String.class))
-                .contains(":500");
+        try {
+            restTemplate.getForObject("http://localhost:" + port + "/faculty/" + idFacultyDel, String.class);
+        } catch (HttpClientErrorException ex) {
+            Assertions.assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        }
     }
 }

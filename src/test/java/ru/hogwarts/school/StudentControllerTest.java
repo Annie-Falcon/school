@@ -8,6 +8,8 @@ import org.springframework.boot.resttestclient.TestRestTemplate;
 import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpClientErrorException;
 import ru.hogwarts.school.controllers.StudentController;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
@@ -36,6 +38,7 @@ public class StudentControllerTest {
 
     Student studentDel;
     long idStudentDel;
+    long idNotExists = -1L;
 
     @BeforeEach
     void SetUp() {
@@ -66,6 +69,15 @@ public class StudentControllerTest {
     public void testGetStudentById() throws Exception {
         Assertions.assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/student/" + idStudentTest, String.class))
                 .contains("МашаTest");
+    }
+
+    @Test
+    public void testGetStudentByIdNotFound() throws Exception {
+        try {
+            restTemplate.getForObject("http://localhost:" + port + "/student/" + idNotExists, String.class);
+        } catch (HttpClientErrorException ex) {
+            Assertions.assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        }
     }
 
     @Test
@@ -117,7 +129,10 @@ public class StudentControllerTest {
 
         restTemplate.delete("http://localhost:" + port + "/student/" + idStudentDel);
 
-        Assertions.assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/student/" + idStudentDel, String.class))
-                .contains(":500");
+        try {
+            restTemplate.getForObject("http://localhost:" + port + "/student/" + idStudentDel, String.class);
+        } catch (HttpClientErrorException ex) {
+            Assertions.assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        }
     }
 }

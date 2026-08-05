@@ -29,7 +29,11 @@ public class FacultyService {
     }
 
     public Faculty get(long id) {
-        return facultyRepository.findById(id).get();
+        if (facultyRepository.findById(id).isEmpty()) {
+            return new Faculty();
+        } else {
+            return facultyRepository.findById(id).get();
+        }
     }
 
     public Collection<Faculty> getAll() {

@@ -28,7 +28,11 @@ public class StudentService {
     }
 
     public Student get(long id) {
-        return studentRepository.findById(id).get();
+        if (studentRepository.findById(id).isEmpty()) {
+            return new Student();
+        } else {
+            return studentRepository.findById(id).get();
+        }
     }
 
     public Collection<Student> getAll() {
