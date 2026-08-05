@@ -13,7 +13,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.hogwarts.school.controllers.FacultyController;
 import ru.hogwarts.school.model.Faculty;
-import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.FacultyRepository;
 import ru.hogwarts.school.repository.StudentRepository;
 import ru.hogwarts.school.service.FacultyService;
@@ -51,6 +50,7 @@ public class FacultyControllerTest {
     final String name = "ФакультетТест";
     final String color = "ЦветТест";
     final long id = 1;
+    final Long idNotExists = -1L;
     Faculty faculty;
     List<Faculty> faculties;
 
@@ -106,7 +106,7 @@ public class FacultyControllerTest {
     }
 
     @Test
-    public void getFacultyBuIdTest() throws Exception {
+    public void getFacultyByIdTest() throws Exception {
 
         when(facultyRepository.findById(any(Long.class))).thenReturn(Optional.of(faculty));
 
@@ -146,5 +146,23 @@ public class FacultyControllerTest {
                 .andExpect(jsonPath("$[0].id").value(id))
                 .andExpect(jsonPath("$[0].name").value(name))
                 .andExpect(jsonPath("$[0].color").value(color));
+    }
+
+    @Test
+    public void getFacultyErrWayTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/faculty1")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void getNoFacultyByIdTest() throws Exception {
+        when(facultyRepository.findById(any(Long.class))).thenReturn(Optional.empty());
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/faculty/" + idNotExists)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 }

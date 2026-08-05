@@ -1,6 +1,5 @@
 package ru.hogwarts.school;
 
-
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +10,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.hogwarts.school.controllers.StudentController;
 import ru.hogwarts.school.model.Student;
@@ -24,7 +22,6 @@ import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -51,6 +48,7 @@ public class StudentControllerTest {
     final String name1 = "СтудентТест1";
     final int age1 = 18;
     final long id1 = 1;
+    final Long idNotExists = -1L;
     Student student1;
     List<Student> students;
 
@@ -143,5 +141,23 @@ public class StudentControllerTest {
                 .andExpect(jsonPath("$[0].id").value(id1))
                 .andExpect(jsonPath("$[0].name").value(name1))
                 .andExpect(jsonPath("$[0].age").value(age1));
+    }
+
+    @Test
+    public void getFacultyErrWayTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/student1")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void getNoFacultyByIdTest() throws Exception {
+        when(studentRepository.findById(any(Long.class))).thenReturn(Optional.empty());
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/student/" + idNotExists)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 }
