@@ -29,8 +29,8 @@ public class StudentController {
     @ManagedOperation(description = "получение студента по id")
     public ResponseEntity getStudent(@PathVariable Long id) {
         Student student = studentService.get(id);
-        if (student == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        if (student == null || student.equals(new Student())) { //|| idStudent == null
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.ok(student);
     }
@@ -73,5 +73,6 @@ public class StudentController {
     @ManagedOperation(description = "получение студентов по возрасту")
     public ResponseEntity<Collection<Student>> getStudentsByColor(@RequestParam(required = false) int age) {
         return ResponseEntity.ok(studentService.getByAge(age));
+
     }
 }
