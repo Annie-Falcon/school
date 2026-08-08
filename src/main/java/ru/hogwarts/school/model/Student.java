@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Table(name = "student")
 public class Student {
     @Id
     @GeneratedValue
@@ -51,12 +52,13 @@ public class Student {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Student student = (Student) o;
-        return Objects.equals(id, student.id) && Objects.equals(name, student.name) && Objects.equals(age, student.age);
+        return Objects.equals(id, student.id);
+        //return Objects.equals(id, student.id) && Objects.equals(name, student.name) && Objects.equals(age, student.age);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, age);
+        return Objects.hash(id); //Objects.hash(id, name, age);
     }
 
     @Override
