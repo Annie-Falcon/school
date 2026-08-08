@@ -29,7 +29,11 @@ public class FacultyService {
     }
 
     public Faculty get(long id) {
-        return facultyRepository.findById(id).get();
+        if (facultyRepository.findById(id).isEmpty()) {
+            return new Faculty();
+        } else {
+            return facultyRepository.findById(id).get();
+        }
     }
 
     public Collection<Faculty> getAll() {
@@ -45,5 +49,17 @@ public class FacultyService {
 
     public Collection<Faculty> findBooksByNameOrColor(String name, String color) {
         return facultyRepository.findBooksByNameIgnoreCaseOrColorIgnoreCase(name, color);
+    }
+
+    public long findIdByNameAndColor(String name, String color) {
+        Collection<Faculty> tempFaculties = this.facultyRepository.findAll().stream()
+                .filter(e -> e.getColor().equals(color) && e.getName().equals(name))
+                .collect(Collectors.toList());
+
+        if (tempFaculties.isEmpty()) {
+            return -1L;
+        } else {
+            return tempFaculties.stream().findFirst().get().getId();
+        }
     }
 }

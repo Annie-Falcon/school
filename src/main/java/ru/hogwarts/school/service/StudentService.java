@@ -28,7 +28,11 @@ public class StudentService {
     }
 
     public Student get(long id) {
-        return studentRepository.findById(id).get();
+        if (studentRepository.findById(id).isEmpty()) {
+            return new Student();
+        } else {
+            return studentRepository.findById(id).get();
+        }
     }
 
     public Collection<Student> getAll() {
@@ -44,5 +48,17 @@ public class StudentService {
 
     public Collection<Student> findByAgeBetween(Integer min, Integer max) {
         return studentRepository.findByAgeBetween(min, max);
+    }
+
+    public long findIdByNameAndAge(String name, Integer age) {
+        Collection<Student> tempStudents = this.studentRepository.findAll().stream()
+                .filter(e -> e.getAge().equals(age) && e.getName().equals(name))
+                .collect(Collectors.toList());
+
+        if (tempStudents.isEmpty()) {
+            return -1L;
+        } else {
+            return tempStudents.stream().findFirst().get().getId();
+        }
     }
 }

@@ -30,8 +30,8 @@ public class FacultyController {
     @ManagedOperation(description = "получение факультета по id")
     public ResponseEntity getFaculty(@PathVariable Long id) {
         Faculty faculty = facultyService.get(id);
-        if (faculty == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        if (faculty == null || faculty.equals(new Faculty())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.ok(faculty);
     }
@@ -78,4 +78,5 @@ public class FacultyController {
         }
         return ResponseEntity.ok(Collections.emptyList());
     }
+
 }
