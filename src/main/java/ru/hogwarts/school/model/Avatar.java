@@ -7,7 +7,7 @@ import java.util.Objects;
 
 @Entity
 public class Avatar {
-    @Id // для БД
+    @Id
     @GeneratedValue // для БД
     private long id;
 

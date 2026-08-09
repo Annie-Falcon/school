@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("student")
@@ -88,7 +89,6 @@ public class StudentController {
         return ResponseEntity.ok().build();
     }
 
-
     @PostMapping(value = "/{id}/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadAvatar(@PathVariable Long id, @RequestParam MultipartFile avatar) throws IOException {
         if (avatar.getSize() > 1024 * 300) {
@@ -122,5 +122,20 @@ public class StudentController {
             response.setContentLength((int) avatar.getFileSize());
             is.transferTo(os);
         }
+    }
+
+    @GetMapping("/get-count-all-student")
+    public Integer getCountAllStudent() {
+        return studentService.getCountAllStudent();
+    }
+
+    @GetMapping("/get-avg-age-student")
+    public Integer getAvgAgeStudent() {
+        return studentService.getAvgAgeStudent();
+    }
+
+    @GetMapping("/get-five-last-students")
+    public List<Student> getFiveLastStudents() {
+        return studentService.getFiveLastStudents();
     }
 }
