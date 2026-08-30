@@ -147,5 +147,6 @@ public class StudentController {
     @GetMapping("/get-avg-age-student-stream")
     public int getAvgAgeStudentStream() {
         return studentService.getAvgAgeStudentStream();
+
     }
 }

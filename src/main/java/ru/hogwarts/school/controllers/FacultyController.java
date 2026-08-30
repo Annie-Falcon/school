@@ -87,5 +87,6 @@ public class FacultyController {
     @GetMapping("/get-some-sum_parallel")
     public long getSomeSumParallel() {
         return facultyService.getSomeSumParallel();
+
     }
 }

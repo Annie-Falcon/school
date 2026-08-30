@@ -98,5 +98,6 @@ public class FacultyService {
                 //.limit(1_000_000)
                 .parallel()
                 .reduce(0, Long::sum);
+
     }
 }
