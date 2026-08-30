@@ -7,6 +7,7 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,7 +69,7 @@ public class StudentService {
         logger.info("method findIdByNameAndAge called");
         Collection<Student> tempStudents = this.studentRepository.findAll().stream()
                 .filter(e -> e.getAge().equals(age) && e.getName().equals(name))
-                .collect(Collectors.toList());
+                .toList();
 
         if (tempStudents.isEmpty()) {
             logger.error("An empty list is displayed for the specified parameters: name={}; age={}", name, age);
@@ -91,5 +92,22 @@ public class StudentService {
     public List<Student> getFiveLastStudents() {
         logger.info("method getFiveLastStudents called");
         return studentRepository.getFiveLastStudents();
+    }
+
+    public List<Student> getStudentsNameStartA() {
+        logger.info("method getStudentsNameStartA called");
+        return studentRepository.findAll()
+                .stream()
+                .filter(i -> i.getName().toUpperCase().startsWith("М"))
+                .sorted(Comparator.comparing(Student::getName))
+                .toList();
+    }
+
+    public int getAvgAgeStudentStream() {
+        logger.info("method getAvgAgeStudentStream called");
+        return (int) Math.round(studentRepository.findAll().stream()
+                .mapToInt(Student::getAge)
+                .average()
+                .orElse(0));
     }
 }
