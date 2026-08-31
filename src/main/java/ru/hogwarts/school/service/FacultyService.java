@@ -8,7 +8,9 @@ import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.repository.FacultyRepository;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 @Service
 public class FacultyService {
@@ -56,7 +58,9 @@ public class FacultyService {
             logger.error("Incorrect faculty color is specified: {}", color);
             throw new IllegalArgumentException("Укажите корректный цвет факультета!");
         }
-        return this.facultyRepository.findAll().stream().filter(e -> e.getColor().equals(color)).collect(Collectors.toList());
+        return this.facultyRepository.findAll().stream()
+                .filter(e -> e.getColor().equals(color))
+                .collect(Collectors.toList());
     }
 
     public Collection<Faculty> findBooksByNameOrColor(String name, String color) {
@@ -68,7 +72,7 @@ public class FacultyService {
         logger.info("method findIdByNameAndColor called");
         Collection<Faculty> tempFaculties = this.facultyRepository.findAll().stream()
                 .filter(e -> e.getColor().equals(color) && e.getName().equals(name))
-                .collect(Collectors.toList());
+                .toList();
 
         if (tempFaculties.isEmpty()) {
             logger.error("An empty list is displayed for the specified parameters: name={}; color={}", name, color);
@@ -76,5 +80,24 @@ public class FacultyService {
         } else {
             return tempFaculties.stream().findFirst().get().getId();
         }
+    }
+
+    public String getLongestFacultyName() {
+        logger.info("method getLongestFacultyName called");
+        return facultyRepository.findAll().stream()
+                .map(Faculty::getName)
+                .max(Comparator.comparingInt(String::length))
+                .orElse("список факультетов пуст");
+    }
+
+    public long getSomeSumParallel() {
+        logger.info("method getSomeInt called");
+        return LongStream
+                .rangeClosed(1, 1_000_000L)
+                //.iterate(1, a -> a +1)
+                //.limit(1_000_000)
+                .parallel()
+                .reduce(0, Long::sum);
+
     }
 }

@@ -79,4 +79,14 @@ public class FacultyController {
         return ResponseEntity.ok(Collections.emptyList());
     }
 
+    @GetMapping("/get-longest-faculty-name")
+    public String getLongestFacultyName() {
+        return facultyService.getLongestFacultyName();
+    }
+
+    @GetMapping("/get-some-sum_parallel")
+    public long getSomeSumParallel() {
+        return facultyService.getSomeSumParallel();
+
+    }
 }
